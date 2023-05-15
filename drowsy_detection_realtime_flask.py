@@ -3,7 +3,6 @@ import threading
 import cv2
 import time
 import numpy as np
-import tensorflow as tf
 from keras.models import load_model
 import torch
 from facenet_pytorch import MTCNN
