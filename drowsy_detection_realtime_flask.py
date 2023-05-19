@@ -14,7 +14,7 @@ app = Flask(__name__)
 # global variables
 camera_frame = None
 drowsy_detected_count = 0
-
+stop_model_detection = False
 
 # The function of drowsy detection
 def drowsy_detection() :
@@ -103,8 +103,9 @@ def start_drowsy_detection() :
 # 프레임을 인코딩한 후 반환하는 함수
 def get_frame() :
     global camera_frame
+    global stop_model_detection
 
-    while True :
+    while not stop_model_detection :
         if camera_frame is not None :
             ret, buffer = cv2.imencode('.jpg', camera_frame)
             frame = buffer.tobytes()
@@ -130,6 +131,11 @@ def show_drowsy_detection_result() :
     else :
         return jsonify(0)
 
+@app.route('/drowsy_detection_finish')
+def drowsy_detection_finish():
+    global stop_model_detection
+    stop_model_detection = True  # Set the flag to stop the model execution
+    return jsonify({'finish_detection':1})
 
 # Flask 앱 실행
 if __name__ == '__main__' :
