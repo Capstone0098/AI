@@ -21,6 +21,8 @@ def drowsy_detection() :
     # variables
     global camera_frame
     global drowsy_detected_count  # '연달아' 졸음이라 예측한 횟수 (최종적인 졸음 판단 기준)
+    global stop_model_detection
+    
     prev_time = 0
     fps = 1
 
@@ -35,7 +37,7 @@ def drowsy_detection() :
     face_detector = MTCNN(keep_all = True, device = device)
     drowsy_detector = load_model('./vgg_16_train_B3K1_taein12_juhyang12_epoch4_seed30.h5')
 
-    while True:
+    while stop_model_detection==False:
         ret, frame = webcam.read()
 
         # when a frame is captured
@@ -103,9 +105,8 @@ def start_drowsy_detection() :
 # 프레임을 인코딩한 후 반환하는 함수
 def get_frame() :
     global camera_frame
-    global stop_model_detection
 
-    while not stop_model_detection :
+    while True :
         if camera_frame is not None :
             ret, buffer = cv2.imencode('.jpg', camera_frame)
             frame = buffer.tobytes()
@@ -134,9 +135,9 @@ def show_drowsy_detection_result() :
 @app.route('/drowsy_detection_finish')
 def drowsy_detection_finish():
     global stop_model_detection
-    stop_model_detection = True  # Set the flag to stop the model execution
+    stop_model_detection = True
     return jsonify({'finish_detection':1})
 
 # Flask 앱 실행
 if __name__ == '__main__' :
-    app.run(host = '0.0.0.0', port = 5000, debug = True)
+    app.run(host = '127.0.0.1', port = 5000, debug = True)
