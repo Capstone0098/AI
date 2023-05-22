@@ -31,7 +31,7 @@ def drowsy_detection() :
     print('Running on device : {}'.format(device))
 
     # webcam
-    webcam = cv2.VideoCapture(6)
+    webcam = cv2.VideoCapture(0)
 
     # detectors
     face_detector = MTCNN(keep_all = True, device = device)
