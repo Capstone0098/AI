@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response, jsonify
+from flask import Flask, render_template, Response, jsonify,request
 import threading
 import cv2
 import time
@@ -6,15 +6,21 @@ import numpy as np
 from keras.models import load_model
 import torch
 from facenet_pytorch import MTCNN
+import requests
+
 
 
 # flask
 app = Flask(__name__)
 
+app.secret_key = 'asdjfhasjh' # Flask 애플리케이션의 비밀 키 설정
+
+
 # global variables
 camera_frame = None
 drowsy_detected_count = 0
 stop_model_detection = False
+user = None
 
 # The function of drowsy detection
 def drowsy_detection() :
@@ -128,14 +134,32 @@ def show_drowsy_detection_result() :
     global drowsy_detected_count
     
     if drowsy_detected_count >= 3 :
+        data={'key':1}
+        response = requests.post('http://capstone0098.online:8080/score', json=data)
         return jsonify(1)
+    
     else :
         return jsonify(0)
+    
+## 유저 아이디 전발받는 부분
+@app.route('/save_session', methods=['POST'])
+def save_session():
+    global user
+    # 전달받은 데이터 파싱
+    data = request.get_json()
+    user = data.get('user')
+    return "flask received user ID"
 
+# 운전 종료 시 호출
 @app.route('/drowsy_detection_finish')
 def drowsy_detection_finish():
+    global user
     global stop_model_detection
     stop_model_detection = True
+
+    data={'user':user, 'key':-5}
+    response = requests.post('http://capstone0098.online:8080/finish', json=data)
+
     return jsonify({'finish_detection':1})
 
 # Flask 앱 실행
