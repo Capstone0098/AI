@@ -135,8 +135,8 @@ def show_drowsy_detection_result() :
     
     if drowsy_detected_count >= 3 :
         data={'key':1}
-        response = requests.post('capstone0098.online:8080/score', json=data)
-        response = requests.post('capstone0098.online:8080/score', json=data)
+        response = requests.post('http://capstone0098.online:8080/score', json=data)
+        response = requests.post('http://capstone0098.online:8080/score', json=data)
         return jsonify(1)
     
     else :
@@ -159,7 +159,7 @@ def drowsy_detection_finish():
     stop_model_detection = True
 
     data={'user':user, 'key':-5}
-    response = requests.post('capstone0098.online:8080/finish', json=data)
+    response = requests.post('http://capstone0098.online:8080/finish', json=data)
 
     return jsonify({'finish_detection':1})
 
