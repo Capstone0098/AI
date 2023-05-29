@@ -136,6 +136,7 @@ def show_drowsy_detection_result() :
     if drowsy_detected_count >= 3 :
         data={'key':1}
         response = requests.post('http://capstone0098.online:8080/score', json=data)
+        
         return jsonify(1)
     
     else :
@@ -164,4 +165,4 @@ def drowsy_detection_finish():
 
 # Flask 앱 실행
 if __name__ == '__main__' :
-    app.run(host = '0.0.0.0', port = 5000, debug = True)
+    app.run(host = '192.168.248.1', port = 5000, debug = True)
