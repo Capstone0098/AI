@@ -136,7 +136,7 @@ def show_drowsy_detection_result() :
     if drowsy_detected_count >= 3 :
         data={'key':1}
         response = requests.post('http://capstone0098.online:8080/score', json=data)
-        response = requests.post('http://capstone0098.online:8080/score', json=data)
+        
         return jsonify(1)
     
     else :
